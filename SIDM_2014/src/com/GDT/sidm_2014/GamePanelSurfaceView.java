@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
+import android.util.DisplayMetrics;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
@@ -13,11 +14,13 @@ public class GamePanelSurfaceView extends SurfaceView implements SurfaceHolder.C
 	
 		private GameThread myThread = null; // Thread to control the rendering
 		private Bitmap bg;
+		
 		private short bgX = 0, bgY = 0;
 		private short mX = 0, mY = 0;
+		
 		// 1) Variables used for background rendering 
 		
-		
+
 
 		// 5) bitmap array to stores 4 images of the spaceship
 		private Bitmap[ ] ship = new Bitmap[4];
@@ -36,6 +39,7 @@ public class GamePanelSurfaceView extends SurfaceView implements SurfaceHolder.C
 			
 			// 2)load the image when this class is being instantiated
 			bg = BitmapFactory.decodeResource(getResources(),R.drawable.sea);
+			
 			
 			// 7) Load the images of the spaceships
 			ship[0] = BitmapFactory.decodeResource(getResources(),R.drawable.ship2_1);
@@ -102,19 +106,42 @@ public class GamePanelSurfaceView extends SurfaceView implements SurfaceHolder.C
 		}
 		
 		@Override
-		public boolean onTouchEvent(MotionEvent event){
+		public boolean onTouchEvent(MotionEvent event)
+		{
 		
 		// 10) In event of touch on screen, the spaceship will relocate to the point of touch
 			//In the event to locate the location where touch action occurs 
 			short X = (short) event.getX(); 
 			short Y = (short) event.getY(); 
-			if(event.getAction() == MotionEvent.ACTION_DOWN){ 
+			if(event.getAction() == MotionEvent.ACTION_DOWN)
+			{ 
 				// New location where the image to land on 
 				mX = (short)(X - ship[shipIndex].getWidth()/2);
 				mY = (short)(Y - ship[shipIndex].getHeight()/2); 
-				}
+			}
+			Box theBox;
+			theBox = new Box((float)mX,(float)mY,(float)ship[shipIndex].getWidth(),(float)ship[shipIndex].getHeight());
 			
+			Box theBoxTwo;
+			//theBoxTwo = new Box(aX,aY,stone[stoneIndex].getWidth(),stone[stoneIndex].getHeight()));
+			
+			//if(CheckCollision(Box((float)mX,(float)mY,(float)ship[shipIndex].getWidth(),(float)ship[shipIndex].getHeight()),
 		
 			return super.onTouchEvent(event);
+		}
+		
+		public boolean CheckCollision(Box BoxOne, Box BoxTwo)
+		{
+		    if ((BoxOne.x > BoxTwo.x + BoxTwo.width - 1) || // is b1 on the right side of b2?
+		            (BoxOne.y > BoxTwo.y + BoxTwo.height - 1) || // is b1 under b2?
+		            (BoxTwo.x > BoxOne.x + BoxOne.width - 1) || // is b2 on the right side of b1?
+		            (BoxTwo.y > BoxOne.y + BoxOne.height - 1))   // is b2 under b1?
+		        {
+		            // no collision
+		            return false;
+		        }
+		     
+		        // collision
+			return true;
 		}
 }
