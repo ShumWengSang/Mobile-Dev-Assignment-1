@@ -13,7 +13,7 @@ public class GameThread extends Thread {
 			private SurfaceHolder holder;
 			
 			// Flag to hold game state 
-			private boolean isRun = false;
+			private boolean isRun;
 			
 			long curr = 0;
 			long prev = 0;
@@ -22,6 +22,7 @@ public class GameThread extends Thread {
 			// Constructor for this class 
 			public GameThread(SurfaceHolder holder, GamePanelSurfaceView myView){
 				super();
+				isRun = true;
 				this.myView = myView;
 				this.holder = holder;
 			}
@@ -40,8 +41,10 @@ public class GameThread extends Thread {
 						try {
 							c = holder.lockCanvas();
 							synchronized(holder){
+								if(myView != null){
 								myView.update();
-								myView.doDraw(c); 
+								myView.doDraw(c);
+								}
 							}		
 						}
 						finally{
