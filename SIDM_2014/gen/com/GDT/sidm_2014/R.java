@@ -45,17 +45,24 @@ public final class R {
         public static final int mainpage=0x7f020014;
         public static final int pause=0x7f020015;
         public static final int pause1=0x7f020016;
-        public static final int sea=0x7f020017;
-        public static final int seaship1=0x7f020018;
-        public static final int seaship2=0x7f020019;
-        public static final int seaship3=0x7f02001a;
-        public static final int seaship4=0x7f02001b;
-        public static final int ship2_1=0x7f02001c;
-        public static final int splash=0x7f02001d;
-        public static final int splashpage=0x7f02001e;
-        public static final int star=0x7f02001f;
-        public static final int test=0x7f020020;
-        public static final int wood=0x7f020021;
+        public static final int pirate1=0x7f020017;
+        public static final int pirate2=0x7f020018;
+        public static final int pirate3=0x7f020019;
+        public static final int pirate4=0x7f02001a;
+        public static final int sea=0x7f02001b;
+        public static final int seaship1=0x7f02001c;
+        public static final int seaship2=0x7f02001d;
+        public static final int seaship3=0x7f02001e;
+        public static final int seaship4=0x7f02001f;
+        public static final int ship2_1=0x7f020020;
+        public static final int ship2_2=0x7f020021;
+        public static final int ship2_3=0x7f020022;
+        public static final int ship2_4=0x7f020023;
+        public static final int splash=0x7f020024;
+        public static final int splashpage=0x7f020025;
+        public static final int star=0x7f020026;
+        public static final int test=0x7f020027;
+        public static final int wood=0x7f020028;
     }
     public static final class id {
         public static final int action_settings=0x7f080004;

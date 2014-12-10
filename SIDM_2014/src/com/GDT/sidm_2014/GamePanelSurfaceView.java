@@ -55,12 +55,12 @@ public class GamePanelSurfaceView extends SurfaceView implements SurfaceHolder.C
 			ship[2] = BitmapFactory.decodeResource(getResources(), R.drawable.seaship3); 
 			ship[3] = BitmapFactory.decodeResource(getResources(), R.drawable.seaship4);
 			//stone
-			stone[0] = BitmapFactory.decodeResource(getResources(),R.drawable.asteroid01);
-			stone[1] = BitmapFactory.decodeResource(getResources(),R.drawable.asteroid02);
-			stone[2] = BitmapFactory.decodeResource(getResources(),R.drawable.asteroid03);
-			stone[3] = BitmapFactory.decodeResource(getResources(),R.drawable.asteroid04);
-			stone[4] = BitmapFactory.decodeResource(getResources(),R.drawable.asteroid05);
-			stone[5] = BitmapFactory.decodeResource(getResources(),R.drawable.asteroid06);
+			stone[0] = BitmapFactory.decodeResource(getResources(),R.drawable.pirate1);
+			stone[1] = BitmapFactory.decodeResource(getResources(),R.drawable.pirate2);
+			stone[2] = BitmapFactory.decodeResource(getResources(),R.drawable.pirate3);
+			stone[3] = BitmapFactory.decodeResource(getResources(),R.drawable.pirate4);
+			//stone[4] = BitmapFactory.decodeResource(getResources(),R.drawable.asteroid05);
+			//stone[5] = BitmapFactory.decodeResource(getResources(),R.drawable.asteroid06);
 			
 			
 			star[0] = BitmapFactory.decodeResource(getResources(),R.drawable.star);
@@ -129,7 +129,7 @@ public class GamePanelSurfaceView extends SurfaceView implements SurfaceHolder.C
 			shipIndex%=4;
 			//object
 			stoneIndex++; 
-			stoneIndex%=6;
+			stoneIndex%=4;
 		}
 		
 		// Rendering is done on Canvas
