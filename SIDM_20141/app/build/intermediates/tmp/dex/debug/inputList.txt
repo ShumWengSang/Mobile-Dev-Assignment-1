@@ -1,0 +1,2 @@
+C:\Users\Shum\AndroidstudioProjects\SIDM_20141\app\build\intermediates\classes\debug
+C:\Users\Shum\AndroidstudioProjects\SIDM_20141\app\build\intermediates\pre-dexed\debug\support-v4-19.1.0-f53c83cb7f1a09152e59d16cec930fc2e32acc1c.jar
