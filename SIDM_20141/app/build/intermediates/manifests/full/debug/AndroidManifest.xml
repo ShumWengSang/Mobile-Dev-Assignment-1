@@ -14,35 +14,44 @@
         android:label="@string/app_name" >
         <activity
             android:name="com.GDT.sidm_2014.SplashPage"
-            android:label="@string/app_name" >
+            android:label="@string/app_name"
+            android:screenOrientation="landscape" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name="com.GDT.sidm_2014.MainMenu" >
+        <activity
+            android:name="com.GDT.sidm_2014.MainMenu"
+            android:screenOrientation="landscape" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.default" />
             </intent-filter>
         </activity>
-        <activity android:name="com.GDT.sidm_2014.HelpPage" >
+        <activity
+            android:name="com.GDT.sidm_2014.HelpPage"
+            android:screenOrientation="landscape" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.default" />
             </intent-filter>
         </activity>
-        <activity android:name="com.GDT.sidm_2014.GamePage" >
+        <activity
+            android:name="com.GDT.sidm_2014.GamePage"
+            android:screenOrientation="landscape" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.default" />
             </intent-filter>
         </activity>
-        <activity android:name="com.GDT.sidm_2014.OptionPage" >
+        <activity
+            android:name="com.GDT.sidm_2014.OptionPage"
+            android:screenOrientation="landscape" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
