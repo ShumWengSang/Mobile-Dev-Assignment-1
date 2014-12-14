@@ -11,10 +11,11 @@ import android.util.DisplayMetrics;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
+import android.widget.Button;
 
-public class GamePanelSurfaceView extends SurfaceView implements SurfaceHolder.Callback{
+
+public class GamePanelSurfaceView extends SurfaceView implements SurfaceHolder.Callback {
 	// Implement this interface to receive information about changes to the surface.
-	
 		private GameThread myThread = null; // Thread to control the rendering
 		private Bitmap bg, scaledbg;
 		private short bgX = 0, bgY = 0;
@@ -25,12 +26,11 @@ public class GamePanelSurfaceView extends SurfaceView implements SurfaceHolder.C
 		Pirate thePirate = new Pirate();
 		
 		int Hits = 3;
-		
-		//point
-		private Bitmap[ ] star = new Bitmap[1];
-		//constructor for this GamePanelSurfaceView class
-		public GamePanelSurfaceView (Context context){
+        Button YOLO;
 
+		//constructor for this GamePanelSurfaceView class
+		public GamePanelSurfaceView (Context context)
+        {
 			// Context is the current state of the application/object
 			super(context);
 			DisplayMetrics metrics = context.getResources().getDisplayMetrics();
@@ -57,12 +57,10 @@ public class GamePanelSurfaceView extends SurfaceView implements SurfaceHolder.C
             thePirate.Texture[2] = BitmapFactory.decodeResource(getResources(),R.drawable.pirate3);
             thePirate.Texture[3] = BitmapFactory.decodeResource(getResources(),R.drawable.pirate4);
 
-			
-			
-			star[0] = BitmapFactory.decodeResource(getResources(),R.drawable.star);
+
 			// Create the game loop thread
 			myThread = new GameThread(getHolder(), this);
-			
+
 			// Make the GamePanel focusable so it can handle events
 			setFocusable(true);
 		}
@@ -113,15 +111,23 @@ public class GamePanelSurfaceView extends SurfaceView implements SurfaceHolder.C
             thePlayer.update();
 			//object
             thePirate.update(thePlayer.Pos);
+
+            if(Entity.CollisionDetection(thePlayer,thePirate))
+            {
+                thePlayer.LifePoints--;
+            }
 		}
 
     // Rendering is done on Canvas
-    public void doDraw(Canvas canvas) {
-        if (canvas == null) {
+    public void doDraw(Canvas canvas)
+    {
+        if (canvas == null)
+        {
             return;
         }
         // 3) Re-draw 2nd image after the 1st image ends
-        if (bg != null) {
+        if (bg != null)
+        {
             canvas.drawBitmap(scaledbg, bgX, bgY, null);
             canvas.drawBitmap(scaledbg, bgX + ScreenWidth, bgY, null);
         }
@@ -150,8 +156,8 @@ public class GamePanelSurfaceView extends SurfaceView implements SurfaceHolder.C
 			int action = event.getAction();
 		// 10) In event of touch on screen, the spaceship will relocate to the point of touch
 			//In the event to locate the location where touch action occurs 
-			short X = (short) event.getX(); 
-			short Y = (short) event.getY(); 
+			short X = (short) event.getRawX();
+			short Y = (short) event.getRawY();
 			switch(action)
 			{
 			case MotionEvent.ACTION_DOWN:
@@ -163,11 +169,6 @@ public class GamePanelSurfaceView extends SurfaceView implements SurfaceHolder.C
 				// New location where the image to land on
                 thePlayer.TouchEvent(X,Y);
 				}
-
-            if(Entity.CollisionDetection(thePlayer,thePirate))
-            {
-                thePlayer.LifePoints--;
-            }
 		
 			return super.onTouchEvent(event);
 		}
