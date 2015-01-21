@@ -18,6 +18,8 @@ public class Entity {
     int Health;
     Objects theObject;
 
+    int ScreenHeight;
+    int ScreenWidth;
 
     //Store bitmap
     public Bitmap[] Texture;
@@ -89,7 +91,28 @@ public class Entity {
          Index %= MaxIndex;
         Pos = Vector2D.AddVectors(Pos,Vel);
 
+        if(Pos.x < 0)
+        {
+            Pos.x = 0;
+        }
+        else if(Pos.x > ScreenWidth)
+        {
+            Pos.x = ScreenWidth;
+        }
+        if(Pos.y < 0)
+        {
+            Pos.y = 0;
+        }
+        else if(Pos.y > ScreenHeight)
+        {
+            Pos.y = ScreenHeight;
+        }
+    }
 
+    void GetScreenMetrics(int width, int height)
+    {
+        ScreenHeight = height;
+        ScreenWidth = width;
     }
 
 
