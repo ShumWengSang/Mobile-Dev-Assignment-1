@@ -27,10 +27,10 @@ public class GamePage extends Activity implements OnClickListener{
 				
 		requestWindowFeature(Window.FEATURE_NO_TITLE);// hide title
 	    getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN); //hide top bar
-	    setContentView(new GamePanelSurfaceView(this));
+	    setContentView(new GamePanelSurfaceView(this,this));
 
-      //  btn_fire = (Button)findViewById(R.id.btn_fire);
-      //  btn_fire.setOnClickListener(this);
+        //btn_fire = (Button)findViewById(R.id.btn_fire);
+       // btn_fire.setOnClickListener(this);
 	}
 
     public void onClick(View v){
