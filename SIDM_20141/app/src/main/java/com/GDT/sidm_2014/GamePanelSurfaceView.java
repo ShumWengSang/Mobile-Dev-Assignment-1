@@ -16,6 +16,13 @@ import android.util.DisplayMetrics;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
+import android.content.DialogInterface;
+import android.app.Activity;
+import android.app.AlertDialog;
+import android.text.InputFilter;
+import android.text.InputType;
+import android.widget.EditText;
+import android.content.Intent;
 import android.widget.Button;
 
 public class GamePanelSurfaceView extends SurfaceView implements SurfaceHolder.Callback, SensorEventListener
@@ -31,9 +38,20 @@ public class GamePanelSurfaceView extends SurfaceView implements SurfaceHolder.C
     Pirate thePirate = new Pirate();
     Vector<Entity> theListofEntities;
     int Hits = 3;
+    // Pause button state
+    private boolean pausepress = true;
 
+    // Object
+    private Objects shootBtn;
+    private Objects PauseB2;
+
+    // Alert Dialog
+    AlertDialog.Builder alert = null;
+    Activity activityTracker;
+
+    final EditText input = new EditText(getContext());
     //constructor for this GamePanelSurfaceView class
-    public GamePanelSurfaceView (Context context)
+    public GamePanelSurfaceView (Context context, Activity activity)
     {
         // Context is the current state of the application/object
         super(context);
@@ -42,7 +60,8 @@ public class GamePanelSurfaceView extends SurfaceView implements SurfaceHolder.C
         ScreenHeight = metrics.heightPixels;
         // Adding the callback (this) to the surface holder to intercept events
         getHolder().addCallback(this);
-
+        // To track an activity
+        activityTracker = activity;
         // 2)load the image when this class is being instantiated
         bg = BitmapFactory.decodeResource(getResources(),R.drawable.sea);
         scaledbg = Bitmap.createScaledBitmap(bg,  (int)(ScreenWidth),(int)(ScreenHeight), true);
@@ -77,6 +96,32 @@ public class GamePanelSurfaceView extends SurfaceView implements SurfaceHolder.C
 
         theListofEntities.add(thePlayer);
         theListofEntities.add(thePirate);
+
+
+        // Alert Dialogs
+        // Create Alert Dialog
+        alert = new AlertDialog.Builder(getContext());
+        input.setInputType(InputType.TYPE_CLASS_TEXT);
+
+        int maxLength = 20;
+        InputFilter[] FilterArray = new InputFilter[1];
+        FilterArray[0] = new InputFilter.LengthFilter(maxLength);
+        input.setFilters(FilterArray);
+
+        alert.setCancelable(false);
+        alert.setMessage("Please enter your name");
+        alert.setView(input);
+
+        alert.setPositiveButton ("Ok", new DialogInterface.OnClickListener()
+        {
+            // do something when the button is clicked
+            public void onClick(DialogInterface arg0, int arg1)
+            {
+                Intent intent = new Intent();
+                intent.setClass(getContext(), MainMenu.class);
+                activityTracker.startActivity(intent);
+            }
+        });
     }
 
     public void onAccuracyChanged(Sensor sensor, int accuracy)
@@ -162,10 +207,16 @@ public class GamePanelSurfaceView extends SurfaceView implements SurfaceHolder.C
         thePlayer.update();
         //object
         thePirate.update(thePlayer.Pos);
-
+        alert = new AlertDialog.Builder (getContext());
+        if(thePlayer.LifePoints < 0)
+        {
+            alert.setTitle("No Rating! Try Harder!");
+            //alert.show();s
+        }
         if(Entity.CollisionDetection(thePlayer,thePirate))
         {
             thePlayer.LifePoints--;
+
         }
     }
 
