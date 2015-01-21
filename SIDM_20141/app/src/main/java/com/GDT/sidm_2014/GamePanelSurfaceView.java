@@ -40,7 +40,7 @@ public class GamePanelSurfaceView extends SurfaceView implements SurfaceHolder.C
     int Hits = 3;
     // Pause button state
     private boolean pausepress = true;
-
+    private boolean dead = false;
     // Object
     private Objects shootBtn;
     private Objects PauseB2;
@@ -98,21 +98,26 @@ public class GamePanelSurfaceView extends SurfaceView implements SurfaceHolder.C
         theListofEntities.add(thePirate);
 
 
-        // Alert Dialogs
-        // Create Alert Dialog
+
+
+    }
+    // Alert Dialogs
+    // Create Alert Dialog
+    public void AlertMsg()
+    {
         alert = new AlertDialog.Builder(getContext());
         input.setInputType(InputType.TYPE_CLASS_TEXT);
 
         int maxLength = 20;
-        InputFilter[] FilterArray = new InputFilter[1];
-        FilterArray[0] = new InputFilter.LengthFilter(maxLength);
-        input.setFilters(FilterArray);
+        //InputFilter[] FilterArray = new InputFilter[1];
+        //FilterArray[0] = new InputFilter.LengthFilter(maxLength);
+       // input.setFilters(FilterArray);
 
         alert.setCancelable(false);
-        alert.setMessage("Please enter your name");
+       // alert.setMessage("Please enter your name");
         alert.setView(input);
 
-        alert.setPositiveButton ("Ok", new DialogInterface.OnClickListener()
+        alert.setPositiveButton ("Back to main menu", new DialogInterface.OnClickListener()
         {
             // do something when the button is clicked
             public void onClick(DialogInterface arg0, int arg1)
@@ -122,8 +127,9 @@ public class GamePanelSurfaceView extends SurfaceView implements SurfaceHolder.C
                 activityTracker.startActivity(intent);
             }
         });
-    }
 
+
+    }
     public void onAccuracyChanged(Sensor sensor, int accuracy)
     {
         //Do something here if accuracy changed
@@ -169,6 +175,7 @@ public class GamePanelSurfaceView extends SurfaceView implements SurfaceHolder.C
             myThread.startRun(true);
             myThread.start();
         }
+
     }
 
     public void surfaceDestroyed(SurfaceHolder holder){
@@ -207,17 +214,20 @@ public class GamePanelSurfaceView extends SurfaceView implements SurfaceHolder.C
         thePlayer.update();
         //object
         thePirate.update(thePlayer.Pos);
-        alert = new AlertDialog.Builder (getContext());
-        if(thePlayer.LifePoints < 0)
-        {
-            alert.setTitle("No Rating! Try Harder!");
-            //alert.show();s
-        }
+       // alert = new AlertDialog.Builder (getContext());
+
         if(Entity.CollisionDetection(thePlayer,thePirate))
         {
-            thePlayer.LifePoints--;
-
+            if(dead == false) {
+                thePlayer.LifePoints--;
+                if (thePlayer.LifePoints < 0) {
+                    // alert.setTitle("No Rating! Try Harder!");
+                    dead = true;
+                    thePlayer.LifePoints = 0;
+                }
+            }
         }
+
     }
 
     // Rendering is done on Canvas
@@ -257,6 +267,10 @@ public class GamePanelSurfaceView extends SurfaceView implements SurfaceHolder.C
         paint.setStrokeWidth(100);
         paint.setTextSize(30);
         canvas.drawText("Lifes:" + " " + thePlayer.LifePoints, 600, 50, paint);
+        if(dead == true)
+        {
+            canvas.drawText("You're dead click anywhere to continue", 400, 400, paint);
+        }
     }
     @Override
     public boolean onTouchEvent(MotionEvent event){
@@ -275,6 +289,10 @@ public class GamePanelSurfaceView extends SurfaceView implements SurfaceHolder.C
         if(event.getAction() == MotionEvent.ACTION_DOWN){
             // New location where the image to land on
             // thePlayer.TouchEvent(X,Y);
+            if(dead == true){
+                AlertMsg();
+                alert.show();
+            }
         }
 
         return super.onTouchEvent(event);

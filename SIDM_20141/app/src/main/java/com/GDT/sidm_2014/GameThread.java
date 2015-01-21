@@ -44,6 +44,7 @@ public class GameThread extends Thread {
 								if(myView != null){
 								myView.update();
 								myView.doDraw(c);
+
 								}
 							}		
 						}
