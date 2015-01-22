@@ -1,2 +1,2 @@
-C:\Users\Seventh\Desktop\JavaAssigment\Mobile-Dev-Assignment-1\SIDM_20141\app\build\intermediates\classes\debug
-C:\Users\Seventh\Desktop\JavaAssigment\Mobile-Dev-Assignment-1\SIDM_20141\app\build\intermediates\pre-dexed\debug\support-v4-19.1.0-c7ba9e085b9464a9c99fd9245226ec4639e0125f.jar
+C:\Users\132067D\Documents\GitHub\Mobile-Dev-Assignment-1\SIDM_20141\app\build\intermediates\classes\debug
+C:\Users\132067D\Documents\GitHub\Mobile-Dev-Assignment-1\SIDM_20141\app\build\intermediates\pre-dexed\debug\support-v4-19.1.0-0a2cb9a99d3ab7a6e231436b3721f7bc4bfdc4ff.jar

@@ -17,7 +17,7 @@ public class GameThread extends Thread {
 			
 			long curr = 0;
 			long prev = 0;
-			short fps = 20;
+			short fps = 60;
 			
 			// Constructor for this class 
 			public GameThread(SurfaceHolder holder, GamePanelSurfaceView myView){

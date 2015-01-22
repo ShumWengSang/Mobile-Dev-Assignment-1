@@ -38,8 +38,9 @@ public class HelpPage extends Activity{
                 } finally {
                     finish();
                     //Create new activity based on and intent with CurrentActivity
-                    Intent intent = new Intent(HelpPage.this, MainMenu.class);
-					startActivity(intent);
+                    System.exit(1);
+                   // Intent intent = new Intent(HelpPage.this, MainMenu.class);
+					//startActivity(intent);
 
                 }
             }
@@ -51,6 +52,7 @@ public class HelpPage extends Activity{
     public boolean onTouchEvent(MotionEvent event){
     	if(event.getAction() == MotionEvent.ACTION_DOWN){
     		_active = false;
+
     	}
     	return true;
     }
