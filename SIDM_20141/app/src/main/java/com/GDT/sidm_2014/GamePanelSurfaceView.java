@@ -36,6 +36,7 @@ public class GamePanelSurfaceView extends SurfaceView implements SurfaceHolder.C
 
     Player thePlayer = new Player();
     Pirate thePirate = new Pirate();
+    powerup thePower = new powerup();
     Vector<Entity> theListofEntities;
     int Hits = 3;
     // Pause button state
@@ -49,6 +50,8 @@ public class GamePanelSurfaceView extends SurfaceView implements SurfaceHolder.C
     AlertDialog.Builder alert = null;
     Activity activityTracker;
 
+    //vector list
+    private Vector<powerup>  HealingList = new Vector<powerup>();
     final EditText input = new EditText(getContext());
     //constructor for this GamePanelSurfaceView class
     public GamePanelSurfaceView (Context context, Activity activity)
@@ -80,7 +83,14 @@ public class GamePanelSurfaceView extends SurfaceView implements SurfaceHolder.C
         thePirate.Texture[2] = BitmapFactory.decodeResource(getResources(),R.drawable.pirate3);
         thePirate.Texture[3] = BitmapFactory.decodeResource(getResources(),R.drawable.pirate4);
 
-
+        thePower.EnableBitmap(1);
+        thePower.Texture[0] = BitmapFactory.decodeResource(getResources(),R.drawable.healthpack);
+        for (int i = 0; i < 3; ++i)// 3 = HealingList.Size()
+        {
+            powerup HealingObj = new powerup();
+            HealingObj.Pos.Set((short) HealingObj.r.nextInt(ScreenWidth),(short) HealingObj.r.nextInt(ScreenHeight));
+            HealingList.add(HealingObj);
+        }
         // Create the game loop thread
         myThread = new GameThread(getHolder(), this);
 
@@ -96,6 +106,7 @@ public class GamePanelSurfaceView extends SurfaceView implements SurfaceHolder.C
 
         theListofEntities.add(thePlayer);
         theListofEntities.add(thePirate);
+        theListofEntities.add(thePower);
 
 
 
@@ -227,6 +238,17 @@ public class GamePanelSurfaceView extends SurfaceView implements SurfaceHolder.C
                 }
             }
         }
+        for (int j = 0; j < HealingList.size(); ++j) {
+            if (HealingList.get(j).GetActive()) {
+                if (Entity.CollisionDetection(thePlayer, thePower)) {
+                    if (dead == false) {
+                        thePlayer.LifePoints += 5;
+                        HealingList.get(j).SetActive(false);
+
+                    }
+                }
+            }
+        }
 
     }
 
@@ -252,6 +274,15 @@ public class GamePanelSurfaceView extends SurfaceView implements SurfaceHolder.C
         //object
         thePirate.EntityDraw(canvas);
 
+        //power up
+
+        for (int j = 0; j < HealingList.size(); ++j)
+        {
+            if (HealingList.get(j).GetActive())
+            {
+                thePower.EntityDraw(canvas);
+            }
+        }
         for(Entity iter: theListofEntities)
         {
             iter.EntityDraw(canvas);
