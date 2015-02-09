@@ -7,10 +7,19 @@ package com.GDT.sidm_2014;
 //Done by Jia Wang
 //The Entire class.
 import java.util.ArrayList;
+import java.util.Random;
 
 public class Pirate extends Entity{
     ArrayList<Waypoint> thePoints = new ArrayList<Waypoint>();
     int WayPointTracker = 0;
+    Random r = new Random();
+    boolean Active = true;
+    boolean GetActive(){
+        return Active;
+    }
+    void SetActive(boolean a){
+        Active = a;
+    }
     Pirate()
     {
         theObject = Objects.Pirates;

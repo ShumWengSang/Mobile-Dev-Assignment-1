@@ -52,6 +52,7 @@ public class GamePanelSurfaceView extends SurfaceView implements SurfaceHolder.C
 
     //vector list
     private Vector<powerup>  HealingList = new Vector<powerup>();
+    private Vector<Pirate> PirateSpawn = new Vector<Pirate>();
     final EditText input = new EditText(getContext());
     //constructor for this GamePanelSurfaceView class
     public GamePanelSurfaceView (Context context, Activity activity)
@@ -82,6 +83,12 @@ public class GamePanelSurfaceView extends SurfaceView implements SurfaceHolder.C
         thePirate.Texture[1] = BitmapFactory.decodeResource(getResources(),R.drawable.pirate2);
         thePirate.Texture[2] = BitmapFactory.decodeResource(getResources(),R.drawable.pirate3);
         thePirate.Texture[3] = BitmapFactory.decodeResource(getResources(),R.drawable.pirate4);
+        for (int i = 0; i < 3; ++i)// 3 = HealingList.Size()
+        {
+            Pirate PirateSP = new Pirate();
+            PirateSP.Pos.Set((short) PirateSP.r.nextInt(ScreenWidth),(short) PirateSP.r.nextInt(ScreenHeight));
+            PirateSpawn.add(PirateSP);
+        }
 
         thePower.EnableBitmap(1);
         thePower.Texture[0] = BitmapFactory.decodeResource(getResources(),R.drawable.healthpack);
@@ -226,15 +233,17 @@ public class GamePanelSurfaceView extends SurfaceView implements SurfaceHolder.C
         //object
         thePirate.update(thePlayer.Pos);
        // alert = new AlertDialog.Builder (getContext());
-
-        if(Entity.CollisionDetection(thePlayer,thePirate))
-        {
-            if(dead == false) {
-                thePlayer.LifePoints--;
-                if (thePlayer.LifePoints < 0) {
-                    // alert.setTitle("No Rating! Try Harder!");
-                    dead = true;
-                    thePlayer.LifePoints = 0;
+        for (int j = 0; j < PirateSpawn.size(); ++j) {
+            if (PirateSpawn.get(j).GetActive()) {
+                if (Entity.CollisionDetection(thePlayer, thePirate)) {
+                    if (dead == false) {
+                        thePlayer.LifePoints--;
+                        if (thePlayer.LifePoints < 0) {
+                            // alert.setTitle("No Rating! Try Harder!");
+                            dead = true;
+                            thePlayer.LifePoints = 0;
+                        }
+                    }
                 }
             }
         }
