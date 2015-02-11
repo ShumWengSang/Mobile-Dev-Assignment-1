@@ -1,5 +1,7 @@
 package com.GDT.sidm_2014; // Note: Differs with your project name
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 import java.util.Vector;
 
@@ -36,6 +38,7 @@ public class GamePanelSurfaceView extends SurfaceView implements SurfaceHolder.C
 
     Player thePlayer = new Player();
     Pirate thePirate = new Pirate();
+
     powerup thePower = new powerup();
     Vector<Entity> theListofEntities;
     int Hits = 3;
@@ -50,6 +53,7 @@ public class GamePanelSurfaceView extends SurfaceView implements SurfaceHolder.C
     AlertDialog.Builder alert = null;
     Activity activityTracker;
 
+    List<Entity> entities = new ArrayList<Entity>();
     //vector list
     private Vector<powerup>  HealingList = new Vector<powerup>();
     private Vector<Pirate> PirateSpawn = new Vector<Pirate>();
@@ -69,7 +73,6 @@ public class GamePanelSurfaceView extends SurfaceView implements SurfaceHolder.C
         // 2)load the image when this class is being instantiated
         bg = BitmapFactory.decodeResource(getResources(),R.drawable.sea);
         scaledbg = Bitmap.createScaledBitmap(bg,  (int)(ScreenWidth),(int)(ScreenHeight), true);
-
         // 7) Load the images of the spaceships
         thePlayer.EnableBitmap(4);
         thePlayer.Texture[0] = BitmapFactory.decodeResource(getResources(),R.drawable.seaship1);
@@ -77,18 +80,19 @@ public class GamePanelSurfaceView extends SurfaceView implements SurfaceHolder.C
         thePlayer.Texture[2]  = BitmapFactory.decodeResource(getResources(), R.drawable.seaship3);
         thePlayer.Texture[3]  = BitmapFactory.decodeResource(getResources(), R.drawable.seaship4);
         thePlayer.Pos.Set(400,300);
+
         //pirate
         thePirate.EnableBitmap(4);
         thePirate.Texture[0] = BitmapFactory.decodeResource(getResources(),R.drawable.pirate1);
         thePirate.Texture[1] = BitmapFactory.decodeResource(getResources(),R.drawable.pirate2);
         thePirate.Texture[2] = BitmapFactory.decodeResource(getResources(),R.drawable.pirate3);
         thePirate.Texture[3] = BitmapFactory.decodeResource(getResources(),R.drawable.pirate4);
-        for (int i = 0; i < 3; ++i)// 3 = HealingList.Size()
-        {
-            Pirate PirateSP = new Pirate();
-            PirateSP.Pos.Set((short) PirateSP.r.nextInt(ScreenWidth),(short) PirateSP.r.nextInt(ScreenHeight));
-            PirateSpawn.add(PirateSP);
-        }
+        thePirate.Pos.Set(200,300);
+
+        //Pirate PirateSP = new Pirate();
+       // PirateSP.Pos.Set((short) PirateSP.r.nextInt(400),(short) PirateSP.r.nextInt(600));
+       // PirateSpawn.add(PirateSP);
+
 
         thePower.EnableBitmap(1);
         thePower.Texture[0] = BitmapFactory.decodeResource(getResources(),R.drawable.healthpack);
@@ -108,6 +112,7 @@ public class GamePanelSurfaceView extends SurfaceView implements SurfaceHolder.C
         sensor.registerListener(this,sensor.getSensorList(Sensor.TYPE_ACCELEROMETER).get(0),SensorManager.SENSOR_DELAY_NORMAL);
 
         thePlayer.GetScreenMetrics(ScreenWidth,ScreenHeight);
+        thePirate.GetScreenMetrics(ScreenWidth,ScreenHeight);
 
         theListofEntities = new Vector<Entity>();
 
@@ -162,23 +167,30 @@ public class GamePanelSurfaceView extends SurfaceView implements SurfaceHolder.C
         // Check X axis values i.e. 0 = X axis, 1 = Y axis.
         if (SenseData[0] >= 1)
         {
+            if(!(thePlayer.Accel.y >= 0.5))
+                thePlayer.Accel.y += 0.1 ;
             // if positive x-data exceeds +1,
-            thePlayer.Pos.x -= 10;
             // object moves leftwards.
             //Log.d(TAG, "" + SenseEvent.values);
-        } else if (SenseData[0] <= -1)
+        }
+        else if (SenseData[0] <= -1)
         {
             // if negative x-data exceeds -1,
-            thePlayer.Pos.x += 10;
+            if(!(thePlayer.Accel.y >= -0.5))
+             thePlayer.Accel.y -= 0.1;
             // object moves rightwards.
         }
 
         // Check Y axis values
         if(SenseData[1] >= 1){
-            thePlayer.Pos.y += 10;
+           // thePlayer.Pos.y += 10;
+            if(!(thePlayer.Accel.x >= 0.5))
+             thePlayer.Accel.x += 0.1;
         }
         else if(SenseData[1] <= -1){
-            thePlayer.Pos.y -= 10;
+           // thePlayer.Pos.y -= 10;
+            if(!(thePlayer.Accel.x >= -0.5))
+              thePlayer.Accel.x -= 0.1;
         }
 
         //canvas.drawBitmap(stone[stoneIndex], aX, aY, null);
@@ -307,6 +319,8 @@ public class GamePanelSurfaceView extends SurfaceView implements SurfaceHolder.C
         paint.setStrokeWidth(100);
         paint.setTextSize(30);
         canvas.drawText("Lifes:" + " " + thePlayer.LifePoints, 600, 50, paint);
+        canvas.drawText("Player Pos x: " + thePlayer.Pos.x + " y: " + thePlayer.Pos.y, 100, 100, paint);
+        canvas.drawText("Player Accel x: " + thePlayer.Accel.x + " y: " + thePlayer.Accel.y, 100, 150, paint);
         if(dead == true)
         {
             canvas.drawText("You're dead click anywhere to continue", 400, 400, paint);

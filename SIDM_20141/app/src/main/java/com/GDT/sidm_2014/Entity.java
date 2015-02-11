@@ -13,6 +13,7 @@ public class Entity {
     Vector2D Pos;
     Vector2D Dir;
     Vector2D Vel;
+    Vector2D Accel;
     int Index;
     int MaxIndex;
     int Health;
@@ -28,6 +29,7 @@ public class Entity {
         Pos = new Vector2D(0, 0);
         Dir = new Vector2D(0, 1);
         Vel = new Vector2D(0, 0);
+        Accel = new Vector2D(0,0);
         Index = 0;
         MaxIndex = 0;
         Health = 100;
@@ -89,23 +91,24 @@ public class Entity {
         Index ++;
         if(MaxIndex != 0 )
          Index %= MaxIndex;
+        Vel = Vector2D.AddVectors(Vel,Accel);
         Pos = Vector2D.AddVectors(Pos,Vel);
 
         if(Pos.x < 0)
         {
             Pos.x = 0;
         }
-        else if(Pos.x > ScreenWidth)
+        else if(Pos.x > ScreenWidth - Texture[Index].getWidth())
         {
-            Pos.x = ScreenWidth;
+            Pos.x = ScreenWidth - Texture[Index].getWidth();
         }
         if(Pos.y < 0)
         {
             Pos.y = 0;
         }
-        else if(Pos.y > ScreenHeight)
+        else if(Pos.y > ScreenHeight - Texture[Index].getHeight())
         {
-            Pos.y = ScreenHeight;
+            Pos.y = ScreenHeight - Texture[Index].getHeight();
         }
     }
 
@@ -146,4 +149,6 @@ public class Entity {
     {
         canvas.drawBitmap(Texture[Index], Pos.x, Pos.y, null);
     }
+
+    static void Instantiate(){};
 }

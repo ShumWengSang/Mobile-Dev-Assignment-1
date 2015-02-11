@@ -6,6 +6,9 @@ package com.GDT.sidm_2014;
 
 //Done by Jia Wang
 //The Entire class.
+import android.graphics.BitmapFactory;
+import android.view.View;
+
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -43,6 +46,12 @@ public class Pirate extends Entity{
                 thePoints.get(i).nextPoint = thePoints.get(0);
             }
         }
+
+       // EnableBitmap(4);
+        //Texture[0] = BitmapFactory.decodeResource(getResources(), R.drawable.pirate1);
+       // Texture[1] = BitmapFactory.decodeResource(getResources(),R.drawable.pirate2);
+       // Texture[2] = BitmapFactory.decodeResource(getResources(),R.drawable.pirate3);
+       // Texture[3] = BitmapFactory.decodeResource(getResources(),R.drawable.pirate4);
     }
     void update()
     {
@@ -69,5 +78,10 @@ public class Pirate extends Entity{
             }
         }
         //Vel = Dir.VScaleMultiplication(10);
+    }
+
+    static void Instantiate()
+    {
+
     }
 }
