@@ -7,5 +7,5 @@ public enum Objects {
     Player,
     Pirates,
     PowerUps,
-    Cannonballs
+    Explosion
 }

@@ -25,6 +25,9 @@ public class Entity {
     //Store bitmap
     public Bitmap[] Texture;
 
+    int MaxX = 5;
+    int MaxY = 5;
+
     Entity() {
         Pos = new Vector2D(0, 0);
         Dir = new Vector2D(0, 1);
@@ -53,6 +56,24 @@ public class Entity {
         MaxIndex = number;
     }
 
+    public static Boolean CircleCollisionDetection(Entity a, Entity b)
+    {
+        //(go1->pos + go1->vel * dt * m_speed) - (go2->pos + go2->vel * dt * m_speed)).Length() < go1->scale.x + go2->scale.x && (go2->pos - go1->pos).Dot(go1->vel - go2->vel) > 0
+        //go2->pos - go1->pos).Dot(go1->vel - go2->vel) > 0
+       // if((a.Pos + a.Vel) - (b.Pos + b.Vel))
+        Vector2D Atemp = Vector2D.AddVectors(a.Pos,a.Vel);
+        Vector2D Btemp = Vector2D.AddVectors(b.Pos,b.Vel);
+        Vector2D Ctemp = Vector2D.AddVectors(Atemp,Btemp);
+
+        Vector2D Dtemp = Vector2D.SubtractVectors(b.Pos,a.Pos);
+        Vector2D Etemp = Vector2D.SubtractVectors(a.Vel, b.Vel);
+        float Ftemp = Etemp.Cross(Dtemp);
+        if(Ctemp.distance() < 1 && Ftemp > 0)
+        {
+            return true;
+        }
+        return false;
+    }
     public static Boolean CollisionDetection(Entity a, Entity b)
     {
         // Start to detect collision of the top left corner
@@ -92,8 +113,26 @@ public class Entity {
         if(MaxIndex != 0 )
          Index %= MaxIndex;
         Vel = Vector2D.AddVectors(Vel,Accel);
-        Pos = Vector2D.AddVectors(Pos,Vel);
 
+        //Clamping vel
+        if(Vel.x > MaxX)
+        {
+            Vel.x = MaxX;
+        }
+        else if(Vel.x < -MaxX)
+        {
+            Vel.x = -MaxX;
+        }
+        if(Vel.y > MaxY)
+        {
+            Vel.y = MaxY;
+        }
+        else if(Vel.y < -MaxY)
+        {
+            Vel.y = -MaxY;
+        }
+
+        Pos = Vector2D.AddVectors(Pos,Vel);
         if(Pos.x < 0)
         {
             Pos.x = 0;
@@ -138,7 +177,7 @@ public class Entity {
     {
         //return 1 > (thePosReached - go->pos).Length();
         //Vector2D.SubtractVectors(thePosReached,go.Pos).normalize();
-        if ( Vector2D.distance(thePosReached, go.Pos) < 1) {
+        if ( Vector2D.distance(thePosReached, go.Pos) < 3) {
             return (true);
         }
         return(false);
@@ -151,4 +190,9 @@ public class Entity {
     }
 
     static void Instantiate(){};
+
+    public void Repusle()
+    {
+        Vel.Set(-Vel.x, -Vel.y);
+    }
 }

@@ -38,8 +38,10 @@ public class GamePanelSurfaceView extends SurfaceView implements SurfaceHolder.C
 
     Player thePlayer = new Player();
     Pirate thePirate = new Pirate();
-
+    Explosion theExplosion = new Explosion();
     powerup thePower = new powerup();
+    Bomb theBomb = new Bomb();
+
     Vector<Entity> theListofEntities;
     int Hits = 3;
     // Pause button state
@@ -53,10 +55,9 @@ public class GamePanelSurfaceView extends SurfaceView implements SurfaceHolder.C
     AlertDialog.Builder alert = null;
     Activity activityTracker;
 
-    List<Entity> entities = new ArrayList<Entity>();
-    //vector list
     private Vector<powerup>  HealingList = new Vector<powerup>();
     private Vector<Pirate> PirateSpawn = new Vector<Pirate>();
+    private Vector<Bomb> theListofBombs = new Vector<Bomb>();
     final EditText input = new EditText(getContext());
     //constructor for this GamePanelSurfaceView class
     public GamePanelSurfaceView (Context context, Activity activity)
@@ -88,20 +89,25 @@ public class GamePanelSurfaceView extends SurfaceView implements SurfaceHolder.C
         thePirate.Texture[2] = BitmapFactory.decodeResource(getResources(),R.drawable.pirate3);
         thePirate.Texture[3] = BitmapFactory.decodeResource(getResources(),R.drawable.pirate4);
         thePirate.Pos.Set(200,300);
-
+        PirateSpawn.add((thePirate));
         //Pirate PirateSP = new Pirate();
        // PirateSP.Pos.Set((short) PirateSP.r.nextInt(400),(short) PirateSP.r.nextInt(600));
        // PirateSpawn.add(PirateSP);
 
+        theExplosion.EnableBitmap(4);
+        theExplosion.Texture[0] = BitmapFactory.decodeResource(getResources(),R.drawable.explosion1);
+        theExplosion.Texture[1] = BitmapFactory.decodeResource(getResources(),R.drawable.explosion2);
+        theExplosion.Texture[2] = BitmapFactory.decodeResource(getResources(),R.drawable.explosion3);
+        theExplosion.Texture[3] = BitmapFactory.decodeResource(getResources(),R.drawable.explosion4);
 
         thePower.EnableBitmap(1);
         thePower.Texture[0] = BitmapFactory.decodeResource(getResources(),R.drawable.healthpack);
-        for (int i = 0; i < 3; ++i)// 3 = HealingList.Size()
-        {
-            powerup HealingObj = new powerup();
-            HealingObj.Pos.Set((short) HealingObj.r.nextInt(ScreenWidth),(short) HealingObj.r.nextInt(ScreenHeight));
-            HealingList.add(HealingObj);
-        }
+        HealingList.add(thePower);
+
+        theBomb.EnableBitmap(1);
+        theBomb.Texture[0] = BitmapFactory.decodeResource(getResources(),R.drawable.seabomb);
+        theListofBombs.add(theBomb);
+
         // Create the game loop thread
         myThread = new GameThread(getHolder(), this);
 
@@ -111,17 +117,25 @@ public class GamePanelSurfaceView extends SurfaceView implements SurfaceHolder.C
         sensor = (SensorManager)getContext().getSystemService(Context.SENSOR_SERVICE);
         sensor.registerListener(this,sensor.getSensorList(Sensor.TYPE_ACCELEROMETER).get(0),SensorManager.SENSOR_DELAY_NORMAL);
 
-        thePlayer.GetScreenMetrics(ScreenWidth,ScreenHeight);
-        thePirate.GetScreenMetrics(ScreenWidth,ScreenHeight);
+        thePower.GetScreenMetrics(ScreenWidth,ScreenHeight);
+        theBomb.GetScreenMetrics(ScreenWidth,ScreenHeight);
+        theExplosion.GetScreenMetrics(ScreenWidth, ScreenHeight);
 
         theListofEntities = new Vector<Entity>();
 
         theListofEntities.add(thePlayer);
         theListofEntities.add(thePirate);
-        theListofEntities.add(thePower);
+       // theListofEntities.add(thePower);
+        //theListofEntities.add(theBomb);
+
+        for(Entity theEntity : theListofEntities)
+        {
+            theEntity.GetScreenMetrics(ScreenWidth,ScreenHeight);
+        }
 
 
-
+        up = true;
+        left = true;
 
     }
     // Alert Dialogs
@@ -158,6 +172,10 @@ public class GamePanelSurfaceView extends SurfaceView implements SurfaceHolder.C
         //Do something here if accuracy changed
     }
 
+    Boolean up;
+    Boolean left;
+    Boolean Collide = false;
+
     public void onSensorChanged(SensorEvent SenseEvent)
     {
         //Many sensors return 3 values , one for each axis
@@ -167,8 +185,18 @@ public class GamePanelSurfaceView extends SurfaceView implements SurfaceHolder.C
         // Check X axis values i.e. 0 = X axis, 1 = Y axis.
         if (SenseData[0] >= 1)
         {
+            //clamping accel
             if(!(thePlayer.Accel.y >= 0.5))
-                thePlayer.Accel.y += 0.1 ;
+            {
+                thePlayer.Accel.y += 0.1;
+
+                //making him when he accelerate backwards easier
+                if(thePlayer.Accel.y < 0)
+                {
+                    thePlayer.Accel.y = 0;
+                }
+            }
+            up = true;
             // if positive x-data exceeds +1,
             // object moves leftwards.
             //Log.d(TAG, "" + SenseEvent.values);
@@ -176,21 +204,42 @@ public class GamePanelSurfaceView extends SurfaceView implements SurfaceHolder.C
         else if (SenseData[0] <= -1)
         {
             // if negative x-data exceeds -1,
-            if(!(thePlayer.Accel.y >= -0.5))
-             thePlayer.Accel.y -= 0.1;
+            if(!(thePlayer.Accel.y <= -0.5))
+            {
+                thePlayer.Accel.y -= 0.1;
+                if(thePlayer.Accel.y > 0)
+                {
+                    thePlayer.Accel.y = 0;
+                }
+            }
+            up = false;
             // object moves rightwards.
         }
 
         // Check Y axis values
         if(SenseData[1] >= 1){
            // thePlayer.Pos.y += 10;
+            left= true;
             if(!(thePlayer.Accel.x >= 0.5))
-             thePlayer.Accel.x += 0.1;
+            {
+                thePlayer.Accel.x += 0.1;
+                if(thePlayer.Accel.x < 0)
+                {
+                    thePlayer.Accel.x = 0.f;
+                }
+            }
         }
         else if(SenseData[1] <= -1){
+            left = false;
            // thePlayer.Pos.y -= 10;
-            if(!(thePlayer.Accel.x >= -0.5))
-              thePlayer.Accel.x -= 0.1;
+            if(!(thePlayer.Accel.x <= -0.5))
+            {
+                thePlayer.Accel.x -= 0.1;
+                if(thePlayer.Accel.x > 0)
+                {
+                    thePlayer.Accel.x = 0;
+                }
+            }
         }
 
         //canvas.drawBitmap(stone[stoneIndex], aX, aY, null);
@@ -242,13 +291,22 @@ public class GamePanelSurfaceView extends SurfaceView implements SurfaceHolder.C
         // sprite animation
         //ship
         thePlayer.update();
+        for(powerup thePower : HealingList)
+        {
+            thePower.update();
+        }
+        for(Bomb theBomb : theListofBombs)
+        {
+               theBomb.update();
+        }
         //object
         thePirate.update(thePlayer.Pos);
        // alert = new AlertDialog.Builder (getContext());
         for (int j = 0; j < PirateSpawn.size(); ++j) {
             if (PirateSpawn.get(j).GetActive()) {
-                if (Entity.CollisionDetection(thePlayer, thePirate)) {
-                    if (dead == false) {
+                if (Entity.CollisionDetection(thePlayer, PirateSpawn.get(j))) {
+                    if (dead == false)
+                    {
                         thePlayer.LifePoints--;
                         if (thePlayer.LifePoints < 0) {
                             // alert.setTitle("No Rating! Try Harder!");
@@ -256,21 +314,64 @@ public class GamePanelSurfaceView extends SurfaceView implements SurfaceHolder.C
                             thePlayer.LifePoints = 0;
                         }
                     }
+                    PirateSpawn.get(j).Repusle();
+                    thePlayer.Repusle();
+                    Collide = true;
+                }
+                else
+                {
+                    Collide = false;
                 }
             }
         }
         for (int j = 0; j < HealingList.size(); ++j) {
             if (HealingList.get(j).GetActive()) {
-                if (Entity.CollisionDetection(thePlayer, thePower)) {
+                if (Entity.CollisionDetection(thePlayer, HealingList.get(j))) {
                     if (dead == false) {
                         thePlayer.LifePoints += 5;
                         HealingList.get(j).SetActive(false);
 
                     }
+                    Collide = true;
+                }
+                else
+                {
+                    Collide = false;
                 }
             }
         }
-
+        if(theBomb.GetActive())
+        {
+            if(Entity.CollisionDetection(thePlayer,theBomb))
+            {
+                if(dead == false)
+                {
+                    theBomb.SetActive(false);
+                    theBomb.curr = System.currentTimeMillis();
+                    theExplosion.SetActive(true);
+                    theExplosion.Pos.Set(theBomb.Pos.x, theBomb.Pos.y);
+                }
+            }
+        }
+        if(theExplosion.GetActive())
+        {
+            if(Entity.CollisionDetection(thePirate,theExplosion))
+            {
+                PirateSpawn.remove(thePirate);
+                theListofEntities.remove(thePirate);
+            }
+        }
+        for(powerup thePower : HealingList)
+        {
+            if(!thePower.GetActive())
+            {
+                HealingList.remove(thePower);
+            }
+        }
+        if(theExplosion.GetActive())
+        {
+            theExplosion.update();
+        }
     }
 
     // Rendering is done on Canvas
@@ -290,24 +391,20 @@ public class GamePanelSurfaceView extends SurfaceView implements SurfaceHolder.C
 
         // 8) Draw the spaceships
         //canvas.drawBitmap(ship[shipIndex], 100, 100, null);
-        thePlayer.EntityDraw(canvas);
-
-        //object
-        thePirate.EntityDraw(canvas);
-
-        //power up
-
-        for (int j = 0; j < HealingList.size(); ++j)
+        for (Entity theEntity : theListofEntities)
         {
-            if (HealingList.get(j).GetActive())
-            {
-                thePower.EntityDraw(canvas);
-            }
+            theEntity.EntityDraw(canvas);
         }
-        for(Entity iter: theListofEntities)
+        if(theExplosion.GetActive())
         {
-            iter.EntityDraw(canvas);
+            theExplosion.EntityDraw(canvas);
         }
+        if(thePower.GetActive())
+        {
+            thePower.EntityDraw(canvas);
+        }
+        if(theBomb.GetActive())
+         theBomb.EntityDraw(canvas);
 
         displaytext(canvas);
     }
@@ -321,6 +418,11 @@ public class GamePanelSurfaceView extends SurfaceView implements SurfaceHolder.C
         canvas.drawText("Lifes:" + " " + thePlayer.LifePoints, 600, 50, paint);
         canvas.drawText("Player Pos x: " + thePlayer.Pos.x + " y: " + thePlayer.Pos.y, 100, 100, paint);
         canvas.drawText("Player Accel x: " + thePlayer.Accel.x + " y: " + thePlayer.Accel.y, 100, 150, paint);
+        canvas.drawText("Player Vel x: " + thePlayer.Vel.x + " y: " + thePlayer.Vel.y, 100, 200, paint);
+        if(Collide)
+        {
+            canvas.drawText("COLLLIDE", 100,250,paint);
+        }
         if(dead == true)
         {
             canvas.drawText("You're dead click anywhere to continue", 400, 400, paint);

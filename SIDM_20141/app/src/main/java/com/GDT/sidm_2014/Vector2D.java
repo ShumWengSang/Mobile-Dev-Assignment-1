@@ -94,4 +94,25 @@ public class Vector2D {
         y = b;
     }
 
+    public float distanceSquared(final Vector2D other) {
+        final float dx = other.x - x;
+        final float dy = other.y - y;
+
+        return (dx * dx) + (dy * dy);
+    }
+
+    public float distance() {
+        return (float) Math.sqrt(distanceSquared(this));
+    }
+
+   // Vector3 Vector3::Cross( const Vector3& rhs ) const
+  //  {
+   //     return Vector3(y * rhs.z - z * rhs.y, z * rhs.x - x * rhs.z, x * rhs.y - y * rhs.x);
+   // }
+    //return (v1.X*v2.Y) - (v1.Y*v2.X);
+    public float Cross(Vector2D rhs)
+    {
+        return (this.x*rhs.y) - (this.y*rhs.x);
+    }
+
 }
