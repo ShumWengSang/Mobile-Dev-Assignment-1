@@ -347,6 +347,7 @@ public class GamePanelSurfaceView extends SurfaceView implements SurfaceHolder.C
                 if(dead == false)
                 {
                     theBomb.SetActive(false);
+                    thePlayer.LifePoints-= 5;
                     theBomb.curr = System.currentTimeMillis();
                     theExplosion.SetActive(true);
                     theExplosion.Pos.Set(theBomb.Pos.x, theBomb.Pos.y);
@@ -416,9 +417,9 @@ public class GamePanelSurfaceView extends SurfaceView implements SurfaceHolder.C
         paint.setStrokeWidth(100);
         paint.setTextSize(30);
         canvas.drawText("Lifes:" + " " + thePlayer.LifePoints, 600, 50, paint);
-        canvas.drawText("Player Pos x: " + thePlayer.Pos.x + " y: " + thePlayer.Pos.y, 100, 100, paint);
-        canvas.drawText("Player Accel x: " + thePlayer.Accel.x + " y: " + thePlayer.Accel.y, 100, 150, paint);
-        canvas.drawText("Player Vel x: " + thePlayer.Vel.x + " y: " + thePlayer.Vel.y, 100, 200, paint);
+       // canvas.drawText("Player Pos x: " + thePlayer.Pos.x + " y: " + thePlayer.Pos.y, 100, 100, paint);
+       // canvas.drawText("Player Accel x: " + thePlayer.Accel.x + " y: " + thePlayer.Accel.y, 100, 150, paint);
+       // canvas.drawText("Player Vel x: " + thePlayer.Vel.x + " y: " + thePlayer.Vel.y, 100, 200, paint);
         if(Collide)
         {
             canvas.drawText("COLLLIDE", 100,250,paint);
